@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Claude Code 新手入門教學：Windows 安裝、基本觀念、常用指令與實用範例，適合零基礎使用者。">
+<title>Claude Code 新手入門教學｜Windows 完整指南</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Serif+TC:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F5F7FA;
+    --card:#FFFFFF;
+    --ink:#1A2233;
+    --muted:#5E6A80;
+    --line:#DDE3EC;
+    --ps-blue:#012456;
+    --ps-blue-2:#0A3A7D;
+    --accent:#1F5FA8;
+    --warn:#B8401F;
+    --warn-bg:#FBEFEA;
+    --ok:#1D7A4F;
+    --ok-bg:#EAF6EF;
+    --mono:"Cascadia Code","Consolas","Courier New",monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+  body{
+    font-family:"Noto Sans TC",-apple-system,"Microsoft JhengHei",sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.85;
+    font-size:16px;
+  }
+  .wrap{max-width:780px;margin:0 auto;padding:0 20px}
+
+  /* ── Header ── */
+  header{
+    background:var(--ps-blue);
+    color:#fff;
+    padding:56px 0 48px;
+    border-bottom:4px solid var(--accent);
+  }
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:13px;
+    letter-spacing:.12em;
+    color:#8FB4E8;
+    margin-bottom:14px;
+  }
+  .eyebrow::before{content:"PS C:\\> ";color:#5C87C7}
+  h1{
+    font-family:"Noto Serif TC",serif;
+    font-weight:900;
+    font-size:clamp(30px,5.5vw,44px);
+    line-height:1.3;
+    letter-spacing:.02em;
+  }
+  .subtitle{margin-top:14px;color:#C6D6EE;font-size:15.5px;max-width:600px}
+
+  /* ── TOC ── */
+  nav{
+    background:var(--card);
+    border-bottom:1px solid var(--line);
+    padding:14px 0;
+    position:sticky;top:0;z-index:10;
+  }
+  nav .wrap{display:flex;flex-wrap:wrap;gap:8px}
+  nav a{
+    text-decoration:none;
+    color:var(--accent);
+    font-size:13.5px;
+    font-weight:500;
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:4px 14px;
+    transition:background .15s,color .15s;
+  }
+  nav a:hover,nav a:focus-visible{background:var(--accent);color:#fff}
+  a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+  main{padding:48px 0 72px}
+
+  section{margin-bottom:64px}
+  .sec-head{display:flex;align-items:baseline;gap:14px;margin-bottom:20px;border-bottom:2px solid var(--ink);padding-bottom:10px}
+  .sec-num{
+    font-family:var(--mono);
+    font-size:14px;
+    font-weight:700;
+    color:#fff;
+    background:var(--ink);
+    padding:2px 10px;
+    border-radius:4px;
+    flex-shrink:0;
+  }
+  h2{
+    font-family:"Noto Serif TC",serif;
+    font-weight:900;
+    font-size:24px;
+  }
+  h3{font-size:17.5px;font-weight:700;margin:28px 0 10px;color:var(--ps-blue)}
+  p{margin-bottom:14px}
+  strong{font-weight:700}
+  .lead{font-size:17px}
+
+  /* ── Terminal block ── */
+  .term{
+    background:var(--ps-blue);
+    border-radius:8px;
+    overflow:hidden;
+    margin:16px 0 20px;
+    box-shadow:0 2px 10px rgba(1,36,86,.18);
+  }
+  .term-bar{
+    display:flex;align-items:center;justify-content:space-between;
+    background:var(--ps-blue-2);
+    padding:7px 12px;
+  }
+  .term-title{
+    font-family:var(--mono);
+    font-size:12px;
+    color:#A9C3E6;
+  }
+  .copy-btn{
+    font-family:"Noto Sans TC",sans-serif;
+    font-size:12px;
+    color:#DCE8F7;
+    background:transparent;
+    border:1px solid #3A5E96;
+    border-radius:4px;
+    padding:2px 10px;
+    cursor:pointer;
+    transition:background .15s;
+  }
+  .copy-btn:hover{background:#1B4C8F}
+  .term-body{
+    padding:16px 18px;
+    font-family:var(--mono);
+    font-size:14px;
+    line-height:1.7;
+    color:#EAF1FB;
+    overflow-x:auto;
+    white-space:pre;
+  }
+  .term-body .ps{color:#F9E79F}
+  .term-body .cmt{color:#7FA8D9}
+
+  code.inline{
+    font-family:var(--mono);
+    font-size:.9em;
+    background:#E8EDF5;
+    color:var(--ps-blue);
+    padding:1px 6px;
+    border-radius:4px;
+  }
+
+  /* ── Callouts ── */
+  .callout{
+    border-radius:8px;
+    padding:14px 18px;
+    margin:16px 0 20px;
+    font-size:15px;
+    border-left:4px solid;
+  }
+  .callout .tag{font-weight:700;display:block;margin-bottom:4px;font-size:14px;letter-spacing:.05em}
+  .callout.warn{background:var(--warn-bg);border-color:var(--warn)}
+  .callout.warn .tag{color:var(--warn)}
+  .callout.ok{background:var(--ok-bg);border-color:var(--ok)}
+  .callout.ok .tag{color:var(--ok)}
+  .callout.note{background:#EDF3FB;border-color:var(--accent)}
+  .callout.note .tag{color:var(--accent)}
+
+  /* ── Steps ── */
+  .step{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:22px 24px;
+    margin-bottom:18px;
+  }
+  .step-label{
+    font-family:var(--mono);
+    font-size:12.5px;
+    font-weight:700;
+    color:var(--accent);
+    letter-spacing:.1em;
+    margin-bottom:6px;
+  }
+  .step h3{margin-top:0}
+
+  /* ── Concept cards ── */
+  .concepts{display:grid;gap:14px;margin:18px 0}
+  .concept{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:18px 20px;
+  }
+  .concept h4{font-size:16px;font-weight:700;margin-bottom:6px;color:var(--ps-blue)}
+  .concept p{margin:0;font-size:15px;color:#38445C}
+
+  /* ── Table ── */
+  table{width:100%;border-collapse:collapse;margin:16px 0 20px;background:var(--card);font-size:15px}
+  th,td{border:1px solid var(--line);padding:10px 14px;text-align:left;vertical-align:top}
+  th{background:#EDF1F7;font-weight:700;white-space:nowrap}
+  td code{font-family:var(--mono);font-size:.88em;color:var(--ps-blue);white-space:nowrap}
+
+  /* ── Task examples ── */
+  .task{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-left:4px solid var(--ps-blue);
+    border-radius:0 8px 8px 0;
+    padding:14px 18px;
+    margin-bottom:12px;
+  }
+  .task .t-name{font-weight:700;font-size:15px;color:var(--ps-blue);margin-bottom:4px}
+  .task .t-say{font-size:15px;color:#38445C}
+  .task .t-say::before{content:"對它說：";color:var(--muted);font-size:13.5px}
+
+  /* ── FAQ ── */
+  details{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:14px 18px;
+    margin-bottom:10px;
+  }
+  summary{font-weight:700;cursor:pointer;color:var(--ps-blue);font-size:15.5px}
+  details p{margin:10px 0 4px;font-size:15px}
+
+  footer{
+    border-top:1px solid var(--line);
+    padding:28px 0 48px;
+    color:var(--muted);
+    font-size:13.5px;
+  }
+
+  ul.plain{padding-left:22px;margin-bottom:14px}
+  ul.plain li{margin-bottom:6px}
+
+  @media(min-width:640px){
+    .concepts{grid-template-columns:repeat(3,1fr)}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">claude --help</div>
+    <h1>Claude Code 新手入門教學</h1>
+    <p class="subtitle">不會寫程式也能上手的 AI 助理工具 · Windows 安裝到實際應用完整指南</p>
+  </div>
+</header>
+
+<nav aria-label="目錄">
+  <div class="wrap">
+    <a href="#what">一、是什麼</a>
+    <a href="#install">二、安裝</a>
+    <a href="#first">三、首次啟動</a>
+    <a href="#concepts">四、核心觀念</a>
+    <a href="#commands">五、常用指令</a>
+    <a href="#examples">六、實用範例</a>
+    <a href="#faq">七、常見問題</a>
+  </div>
+</nav>
+
+<main>
+<div class="wrap">
+
+<!-- 一 -->
+<section id="what">
+  <div class="sec-head"><span class="sec-num">01</span><h2>Claude Code 是什麼</h2></div>
+  <p class="lead">Claude Code 是在<strong>終端機（PowerShell）中運作的 AI 助理工具</strong>。可以想像成一位坐在您電腦前的助手：您用白話下指令，它直接動手操作您的檔案。</p>
+  <table>
+    <thead><tr><th></th><th>Claude 網頁版</th><th>Claude Code</th></tr></thead>
+    <tbody>
+      <tr><td><strong>檔案存取</strong></td><td>手動上傳、複製貼上</td><td>直接讀寫電腦上的檔案</td></tr>
+      <tr><td><strong>處理量</strong></td><td>一次一份</td><td>可批次處理整個資料夾</td></tr>
+      <tr><td><strong>執行動作</strong></td><td>只能給文字建議</td><td>可執行指令、修改檔案、產出成品</td></tr>
+      <tr><td><strong>安全機制</strong></td><td>—</td><td>每個動作前先徵求您同意</td></tr>
+    </tbody>
+  </table>
+  <div class="callout note"><span class="tag">帳號需求</span>需 Claude Pro 以上付費方案，或 Anthropic API 金鑰。免費方案不含 Claude Code 使用權限。</div>
+</section>
+
+<!-- 二 -->
+<section id="install">
+  <div class="sec-head"><span class="sec-num">02</span><h2>安裝（Windows 原生版）</h2></div>
+
+  <div class="step">
+    <div class="step-label">STEP 1</div>
+    <h3>執行安裝指令</h3>
+    <p>按 <code class="inline">Win</code> 鍵 → 輸入 <code class="inline">powershell</code> → 開啟（<strong>不需</strong>系統管理員身分），貼上以下指令後按 Enter：</p>
+    <div class="term">
+      <div class="term-bar"><span class="term-title">Windows PowerShell</span><button class="copy-btn" data-copy="irm https://claude.ai/install.ps1 | iex">複製</button></div>
+      <div class="term-body"><span class="ps">PS C:\Users\you&gt;</span> irm https://claude.ai/install.ps1 | iex</div>
+    </div>
+    <div class="callout warn"><span class="tag">注意</span>貼上後畫面可能停頓數分鐘，看起來像當機——這是正常現象，請耐心等待，不要關閉視窗。</div>
+  </div>
+
+  <div class="step">
+    <div class="step-label">STEP 2</div>
+    <h3>處理 PATH 環境變數（最常見卡關點）</h3>
+    <p>若安裝訊息提示 <code class="inline">.local\bin is not in your PATH</code>，或之後輸入 <code class="inline">claude</code> 顯示「不是內部或外部命令」，執行以下指令一次解決：</p>
+    <div class="term">
+      <div class="term-bar"><span class="term-title">Windows PowerShell</span><button class="copy-btn" data-copy='[Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Users\$env:USERNAME\.local\bin", "User")'>複製</button></div>
+      <div class="term-body"><span class="ps">PS C:\Users\you&gt;</span> [Environment]::SetEnvironmentVariable("Path", $env:Path + ";C:\Users\$env:USERNAME\.local\bin", "User")</div>
+    </div>
+    <p>執行後<strong>關閉所有 PowerShell 視窗並重新開啟</strong>，設定才會生效。</p>
+  </div>
+
+  <div class="step">
+    <div class="step-label">STEP 3</div>
+    <h3>驗證安裝</h3>
+    <div class="term">
+      <div class="term-bar"><span class="term-title">Windows PowerShell</span><button class="copy-btn" data-copy="claude --version">複製</button></div>
+      <div class="term-body"><span class="ps">PS C:\Users\you&gt;</span> claude --version</div>
+    </div>
+    <div class="callout ok"><span class="tag">成功標誌</span>顯示版本號（例如 2.x.x）即代表安裝完成。</div>
+  </div>
+
+  <div class="step">
+    <div class="step-label">建議加裝</div>
+    <h3>Git for Windows</h3>
+    <p>非必要但強烈建議。未安裝時 Claude Code 以 PowerShell 執行指令；安裝後可使用功能較完整的 Bash 工具。</p>
+    <ul class="plain">
+      <li>下載：<code class="inline">git-scm.com/downloads/win</code></li>
+      <li>安裝時全程使用預設選項即可</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 三 -->
+<section id="first">
+  <div class="sec-head"><span class="sec-num">03</span><h2>首次啟動</h2></div>
+  <p>先建立一個獨立的練習資料夾，再進入該資料夾啟動：</p>
+  <div class="term">
+    <div class="term-bar"><span class="term-title">Windows PowerShell</span><button class="copy-btn" data-copy="mkdir $HOME\Desktop\claude-test; cd $HOME\Desktop\claude-test; claude">複製</button></div>
+    <div class="term-body"><span class="cmt"># 建立並進入練習資料夾</span>
+<span class="ps">PS C:\Users\you&gt;</span> mkdir $HOME\Desktop\claude-test
+<span class="ps">PS C:\Users\you&gt;</span> cd $HOME\Desktop\claude-test
+
+<span class="cmt"># 啟動 Claude Code（首次會引導登入 Claude 帳號）</span>
+<span class="ps">PS ...\claude-test&gt;</span> claude</div>
+  </div>
+  <div class="callout warn"><span class="tag">重要安全原則</span>啟動時會詢問是否「信任此資料夾（Trust folder）」。<strong>切勿在家目錄（C:\Users\您的帳號）直接啟動並信任</strong>——Claude Code 會取得該目錄下所有檔案的讀寫權限。務必先建立獨立工作資料夾，再進入啟動。</div>
+  <p>啟動成功後，直接用白話輸入第一個任務試試看：</p>
+  <div class="term">
+    <div class="term-bar"><span class="term-title">Claude Code</span><button class="copy-btn" data-copy="請建立一個 hello.txt，內容寫「我的第一個 Claude Code 任務成功了！」">複製</button></div>
+    <div class="term-body">&gt; 請建立一個 hello.txt，內容寫「我的第一個 Claude Code 任務成功了！」</div>
+  </div>
+  <p>它會詢問是否允許建立檔案，按 <code class="inline">y</code> 同意。打開資料夾看到 hello.txt，就代表一切正常。</p>
+</section>
+
+<!-- 四 -->
+<section id="concepts">
+  <div class="sec-head"><span class="sec-num">04</span><h2>三個核心觀念</h2></div>
+  <div class="concepts">
+    <div class="concept">
+      <h4>信任資料夾</h4>
+      <p>Claude Code 只能操作您信任的資料夾範圍。一個專案一個資料夾，範圍愈小愈安全。</p>
+    </div>
+    <div class="concept">
+      <h4>權限確認</h4>
+      <p>每次寫入檔案或執行指令前，畫面會跳出確認，按 <strong>y</strong> 同意。這是安全機制，不是故障。</p>
+    </div>
+    <div class="concept">
+      <h4>CLAUDE.md 工作守則</h4>
+      <p>輸入 <strong>/init</strong> 產生守則檔。寫入固定要求（如：一律使用繁體中文），之後每次對話自動遵守。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 五 -->
+<section id="commands">
+  <div class="sec-head"><span class="sec-num">05</span><h2>常用指令速查</h2></div>
+  <table>
+    <thead><tr><th>指令／按鍵</th><th>功能</th></tr></thead>
+    <tbody>
+      <tr><td><code>/help</code></td><td>查看所有可用指令</td></tr>
+      <tr><td><code>/init</code></td><td>建立 CLAUDE.md 工作守則檔</td></tr>
+      <tr><td><code>/clear</code></td><td>清除目前對話，重新開始</td></tr>
+      <tr><td><code>Esc</code></td><td>中斷正在執行的動作</td></tr>
+      <tr><td><code>Ctrl + C</code>（按兩次）</td><td>離開 Claude Code</td></tr>
+      <tr><td><code>claude --version</code></td><td>（於 PowerShell）查看版本</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- 六 -->
+<section id="examples">
+  <div class="sec-head"><span class="sec-num">06</span><h2>實用範例：不會寫程式也能做的事</h2></div>
+  <p>第一個真實任務建議從<strong>低風險、結果看得到</strong>的工作開始。以下為適合新手的起步範例：</p>
+
+  <div class="task">
+    <div class="t-name">批次整理檔案</div>
+    <div class="t-say">「把這個資料夾裡的照片，依拍攝日期分類，各建子資料夾歸檔，並產出一份清單。」</div>
+  </div>
+  <div class="task">
+    <div class="t-name">批次重新命名</div>
+    <div class="t-say">「將資料夾裡 50 個檔案，統一改名為『2026-月份-主題』格式。」</div>
+  </div>
+  <div class="task">
+    <div class="t-name">彙整多份文件</div>
+    <div class="t-say">「這裡有 20 份 Word 會議記錄，擷取每份的結論與待辦事項，彙整成一張 Excel 總表。」</div>
+  </div>
+  <div class="task">
+    <div class="t-name">製作個人網頁</div>
+    <div class="t-say">「幫我做一個個人作品集網頁，深色風格，包含自我介紹與三個作品區塊。」</div>
+  </div>
+  <div class="task">
+    <div class="t-name">修改現有網頁</div>
+    <div class="t-say">「幫我在這個網頁加一個匯出 CSV 的按鈕。」——它會自行讀檔、改碼、存檔。</div>
+  </div>
+
+  <div class="callout note"><span class="tag">操作原則</span>用白話描述<strong>目標</strong>即可，不需懂程式。結果不對就直接說「不對，改成⋯⋯」，它會修正重做。重要檔案請先備份一份再交給它處理。</div>
+</section>
+
+<!-- 七 -->
+<section id="faq">
+  <div class="sec-head"><span class="sec-num">07</span><h2>常見問題</h2></div>
+
+  <details>
+    <summary>輸入 claude 顯示「不是內部或外部命令」？</summary>
+    <p>PATH 環境變數未設定。回到第二節 STEP 2 執行設定指令，並記得關閉所有 PowerShell 視窗後重新開啟。</p>
+  </details>
+  <details>
+    <summary>瀏覽器登入後，終端機沒有反應？</summary>
+    <p>稍等幾秒，認證資訊需要時間回傳。若超過 30 秒仍無反應，按 <code class="inline">Ctrl + C</code> 取消後重新執行 <code class="inline">claude</code>。</p>
+  </details>
+  <details>
+    <summary>它一直跳出確認訊息，很煩，可以關掉嗎？</summary>
+    <p>權限確認是核心安全機制，建議新手保留。熟悉後可在對話中選擇「本次工作階段皆允許」減少詢問次數，但不建議完全關閉。</p>
+  </details>
+  <details>
+    <summary>會不會把我的檔案弄壞？</summary>
+    <p>它只能操作您信任的資料夾，且每個動作都先徵求同意。養成兩個習慣即可安心使用：重要檔案先備份、一個專案用一個獨立資料夾。</p>
+  </details>
+  <details>
+    <summary>需要付費嗎？</summary>
+    <p>需要 Claude Pro（含）以上的付費方案，或使用 Anthropic API 金鑰按用量計費。免費帳號無法使用 Claude Code。</p>
+  </details>
+  <details>
+    <summary>想深入學習，去哪裡看？</summary>
+    <p>官方文件：<code class="inline">docs.claude.com/en/docs/claude-code/overview</code>，或在 Claude Code 內輸入 <code class="inline">/help</code>。</p>
+  </details>
+</section>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrap">Claude Code 新手入門教學 · Windows 版 · 2026 年 7 月編製 · 歡迎自由分享</div>
+</footer>
+
+<script>
+document.querySelectorAll('.copy-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var text = btn.getAttribute('data-copy');
+    navigator.clipboard.writeText(text).then(function(){
+      var old = btn.textContent;
+      btn.textContent = '已複製 ✓';
+      setTimeout(function(){ btn.textContent = old; }, 1600);
+    });
+  });
+});
+</script>
+
+</body>
+</html>
